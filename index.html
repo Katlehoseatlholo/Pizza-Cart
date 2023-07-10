@@ -28,7 +28,7 @@
 
       position: relative;
       top: 0px;
-      background-color: aqua;
+      background-color: rgb(231, 224, 159);
       right: 0px;
     }
 
@@ -165,9 +165,9 @@
 
 <body x-data="{
   items: [
-    { name: 'Small Pizza', price: 79.99, quantity: 0 },
-    { name: 'Medium Pizza', price: 198.99, quantity: 0 },
-    { name: 'Large Pizza', price: 289.99, quantity: 0 }
+    { name: 'Small Pizza',description: 'Snack for One! top-view-pepperoni-pizza-with', price: 79.99, quantity: 0 },
+    { name: 'Medium Pizza',description: 'Jallepino flavoured Pizza made by Chef Kay secret sausages-bell', price: 198.99, quantity: 0 },
+    { name: 'Large Pizza',description:'Full deluxe cheddar cheese Pizza mushroom-pepper-olive' , price: 289.99, quantity: 0 }
   ],
   cartQuantity: 0,
   cartTotal: 0,
@@ -181,12 +181,11 @@
     this.cartTotal += item.price;
   },
   removeFromCart(item) {
-    if (item.quantity > 0) {
-      item.quantity--;
-      this.cartQuantity--;
-      this.cartTotal -= item.price;
-    }
-  },
+    this.cartTotal -= item.price * item.quantity; // Deduct the total price of the item from the cart total
+    this.cartQuantity -= item.quantity; // Deduct the item quantity from the cart quantity
+    item.quantity = 0; // Set the item quantity to zero
+  }
+  ,
   validatePayment() {
     if (this.cashInput > this.cartTotal) {
       this.showMessage = true;
@@ -199,7 +198,7 @@
     }
   }
 }">
-  <div class="main-container">
+  <div class="main-container" style='background-color:rgb(216, 193, 63)'>
     <div class="header">
       <h1><b>Pizza e'Vino</b></h1>
       <p class="est">est 2023</p>
@@ -217,11 +216,12 @@
         <div class="row">
           <template x-for="item in items" :key="item.name">
             <div class="col-md-4 mb-4">
-              <div class="card">
+              <div class="card" style='background-color:yellow'>
                 <img class="card-img-top" src="./images/462773.jpg" alt="Pizza Image">
                 <div class="card-body">
                   <h5 class="card-title" x-text="item.name"></h5>
-                  <p class="card-text">$<span x-text="item.price.toFixed(2)"></span></p>
+                  <p class="card-text" x-text="item.description"></p>
+                  <p class=" card-text">R<span x-text="item.price.toFixed(2)"></span></p>
                   <button class="btn btn-primary" @click="addToCart(item)">Add to Cart</button>
                 </div>
               </div>
@@ -229,23 +229,25 @@
           </template>
         </div>
       </div>
-    </section style='background-color:yellow'>
-    <div class="container mt-5">
+    </section>
+    <div class="container mt-5" style='background-color:rgb(166, 226, 250)'>
       <section>
         <h2>Cart</h2>
         <p>Quantity: <span x-text="cartQuantity"></span></p>
-        <p>Total: $<span x-text="cartTotal.toFixed(2)"></span></p>
+        <p>Total: R<span x-text="cartTotal.toFixed(2)"></span></p>
         <ul>
           <template x-for="item in items" :key="item.name">
-            <li x-show="item.quantity > 0">
-              <span x-text="item.name"></span> -
-              <button class="btn btn-sm btn-secondary" @click="removeFromCart(item)">-</button>
-              <span x-text="item.quantity"></span>
-              <button class="btn btn-sm btn-secondary" @click="addToCart(item)">+</button>
-              -
-              <span x-text="(item.price * item.quantity).toFixed(2)"></span>
-              <button class="btn btn-sm btn-danger" @click="removeFromCart(item)">Remove from Cart</button>
-            </li>
+            <div class="list" style="margin-bottom: 10px;">
+              <li x-show="item.quantity > 0">
+                <span x-text="item.name"></span> -
+                <button class="btn btn-sm btn-secondary" @click="removeFromCart(item)">-</button>
+                <span x-text="item.quantity"></span>
+                <button class="btn btn-sm btn-secondary" @click="addToCart(item)">+</button>
+                -
+                <span x-text="(item.price * item.quantity).toFixed(2)"></span>
+                <button class="btn btn-sm btn-danger" @click="removeFromCart(item)">Remove from Cart</button>
+              </li>
+            </div>
           </template>
         </ul>
         <div>
